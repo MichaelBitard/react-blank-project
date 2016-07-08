@@ -4,7 +4,7 @@ import createElement = __React.createElement;
 
 
 const style = require('./Topology.scss');
-export default class Topology extends React.Component<{}, TopologyState> {
+export default class Topology extends React.Component<TopologyData, TopologyState> {
     constructor(props) {
         super(props);
 
@@ -38,27 +38,14 @@ export default class Topology extends React.Component<{}, TopologyState> {
             .charge(-100)
             .size([800, 150]);
 
-        var node1:TopologyNode = {"name": "node1", "index": 1};
-        var node2:TopologyNode = {"name": "node2", "index": 2};
-        var node3:TopologyNode = {"name": "node3", "index": 3};
-        var node4:TopologyNode = {"name": "node4", "index": 4};
-        var nodes = [
-            node1,
-            node2,
-            node3,
-            node4
-        ];
-        var links:TopologyLink<TopologyNode>[] = [
-            {"source": node3, "target": node2, "weight": 1},
-            {"source": node1, "target": node3, "weight": 3}
-        ];
+
         force
-            .nodes(nodes)
-            .links(links)
+            .nodes(this.props.nodes)
+            .links(this.props.links)
             .start();
 
         var link = svg.selectAll(".link")
-            .data(links)
+            .data(this.props.links)
             .enter().append("line")
             .attr("class", style.link)
             .style("stroke-width", function (d) {
@@ -66,7 +53,7 @@ export default class Topology extends React.Component<{}, TopologyState> {
             });
 
         var node = svg.selectAll(".node")
-            .data(nodes)
+            .data(this.props.nodes)
             .enter().append("g")
             .attr("class", style.node)
             .call(force.drag);
@@ -112,11 +99,11 @@ interface TopologyData {
     links: TopologyLink<TopologyNode>[];
 }
 
-interface TopologyNode extends D3.layout.force.Node {
+export interface TopologyNode extends D3.layout.force.Node {
     name: string;
 }
 
-interface TopologyLink<T extends D3.layout.force.Node> extends D3.layout.force.Link<T> {
+export interface TopologyLink<T extends D3.layout.force.Node> extends D3.layout.force.Link<T> {
     weight: number;
 }
 

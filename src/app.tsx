@@ -10,7 +10,7 @@ import Topology from "./components/Topology/Topology.tsx";
 ReactDOM.render((<Router history={browserHistory}>
         <Route path="/app" component={App}>
             <Route path="world" component={World}/>
-            <Route path="topology" component={Topology}/>
+            <Route path="topology/:nodes/:links" component={Topology}/>
             <Route path="*" component={Hello}/>
         </Route>
         <Redirect from="*" to="/app"/>
