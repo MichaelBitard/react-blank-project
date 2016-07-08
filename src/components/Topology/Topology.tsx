@@ -1,8 +1,9 @@
 import * as React from "react";
-var ReactFauxDOM = require('react-faux-dom');
 import * as D3 from 'd3';
 import createElement = __React.createElement;
 
+
+const style = require('./Topology.scss');
 export default class Topology extends React.Component<{}, TopologyState> {
     constructor(props) {
         super(props);
@@ -14,37 +15,21 @@ export default class Topology extends React.Component<{}, TopologyState> {
 
 
     public render() {
-                // var elementById = document.getElementById("toto");
-        // console.log(elementById);
-        //
-        // var selector = document.createElement('svg');
-        var selector = new ReactFauxDOM.Element('svg');
-        // var htmlElement = SVGElement;
+        return (
+            <div>
+                <div id="chart" style={{width:"1250px", height:"380px"}}></div>
+            </div>)
+    }
 
-        // elementById.appendChild(selector);
-        // selector.appendChild(elementById);
 
-        // var selector = new ReactFauxDOM.Element('svg', elementById);
-        var svg = D3.select(selector)
+    public componentDidMount() {
+        var elementById = document.getElementById("chart");
+
+        var svg = D3.select(elementById).append('svg')
             .attr({
                 width: "1250",
                 height: "380"
             });
-
-        // svg
-        //     .append('rect')
-        //     .attr({
-        //         width: 300,
-        //         height: 300,
-        //         fill: this.state.mouseOver ? 'red' : 'green'
-        //     })
-        //     .on('mouseover', function () {
-        //         this.setState({mouseOver: true});
-        //     }.bind(this))
-        //     .on('mouseout', function () {
-        //         this.setState({mouseOver: false});
-        //     }.bind(this));
-
 
         var force = D3.layout.force()
             .gravity(.05)
@@ -52,17 +37,18 @@ export default class Topology extends React.Component<{}, TopologyState> {
             .linkDistance(100)
             .charge(-100)
             .size([800, 150]);
-        var node1 = {"name": "node1", "index": 1, x: 10, y: 10};
-        var node2 = {"name": "node2", "index": 2, x: 20, y: 20};
-        var node3 = {"name": "node3", "index": 3, x: 30, y: 30};
-        var node4 = {"name": "node4", "index": 4, x: 40, y: 40};
+
+        var node1:MyNode = {"name": "node1", "index": 1};
+        var node2:MyNode = {"name": "node2", "index": 2};
+        var node3:MyNode = {"name": "node3", "index": 3};
+        var node4:MyNode = {"name": "node4", "index": 4};
         var nodes = [
             node1,
             node2,
             node3,
             node4
         ];
-        var links = [
+        var links:MyLink<MyNode>[] = [
             {"source": node3, "target": node2, "weight": 1},
             {"source": node1, "target": node3, "weight": 3}
         ];
@@ -74,7 +60,7 @@ export default class Topology extends React.Component<{}, TopologyState> {
         var link = svg.selectAll(".link")
             .data(links)
             .enter().append("line")
-            .attr("class", "link")
+            .attr("class", style.link)
             .style("stroke-width", function (d) {
                 return Math.sqrt(d.weight);
             });
@@ -82,7 +68,7 @@ export default class Topology extends React.Component<{}, TopologyState> {
         var node = svg.selectAll(".node")
             .data(nodes)
             .enter().append("g")
-            .attr("class", "node")
+            .attr("class", style.node)
             .call(force.drag);
 
         node.append("circle")
@@ -114,14 +100,20 @@ export default class Topology extends React.Component<{}, TopologyState> {
             });
         });
 
-        return selector.toReact();
     }
 
     changeState(value) {
         this.setState({mouseOver: value});
     }
+};
+
+interface MyNode extends D3.layout.force.Node {
+    name: string;
 }
 
+interface MyLink<T extends D3.layout.force.Node> extends D3.layout.force.Link<T> {
+    weight: number;
+}
 
 interface TopologyState {
     mouseOver?:boolean;
