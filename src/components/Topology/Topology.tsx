@@ -38,17 +38,17 @@ export default class Topology extends React.Component<{}, TopologyState> {
             .charge(-100)
             .size([800, 150]);
 
-        var node1:MyNode = {"name": "node1", "index": 1};
-        var node2:MyNode = {"name": "node2", "index": 2};
-        var node3:MyNode = {"name": "node3", "index": 3};
-        var node4:MyNode = {"name": "node4", "index": 4};
+        var node1:TopologyNode = {"name": "node1", "index": 1};
+        var node2:TopologyNode = {"name": "node2", "index": 2};
+        var node3:TopologyNode = {"name": "node3", "index": 3};
+        var node4:TopologyNode = {"name": "node4", "index": 4};
         var nodes = [
             node1,
             node2,
             node3,
             node4
         ];
-        var links:MyLink<MyNode>[] = [
+        var links:TopologyLink<TopologyNode>[] = [
             {"source": node3, "target": node2, "weight": 1},
             {"source": node1, "target": node3, "weight": 3}
         ];
@@ -107,11 +107,16 @@ export default class Topology extends React.Component<{}, TopologyState> {
     }
 };
 
-interface MyNode extends D3.layout.force.Node {
+interface TopologyData {
+    nodes: TopologyNode[];
+    links: TopologyLink<TopologyNode>[];
+}
+
+interface TopologyNode extends D3.layout.force.Node {
     name: string;
 }
 
-interface MyLink<T extends D3.layout.force.Node> extends D3.layout.force.Link<T> {
+interface TopologyLink<T extends D3.layout.force.Node> extends D3.layout.force.Link<T> {
     weight: number;
 }
 
