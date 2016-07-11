@@ -49,7 +49,7 @@ export default class App extends React.Component<{}, AppState> {
                             {this.props.children || <Hello />}
                         </ReactMDL.Cell>
                         <ReactMDL.Cell shadow={1} col={4} tablet={4} desktop={4}>
-                            <ReactMDL.Card style={{width: '100%'}}>
+                            <ReactMDL.Card style={{width: '100%', height: '100%'}}>
                                 <ReactMDL.CardTitle expand className={style.servercard + " mdl-color--teal-300"}>Machine</ReactMDL.CardTitle>
                                 <ReactMDL.CardText className="mdl-color-text--grey-600">
                                     <ul>
